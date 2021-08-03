@@ -3,7 +3,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: "Many disturbances",
+  title: "Multi Disturbances",
   tagline: "Dinosaurs are cool",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
@@ -14,7 +14,7 @@ module.exports = {
   projectName: "mds", // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: "Many Disturbances",
+      title: "Multi Disturbances",
       logo: {
         alt: "My Site Logo",
         src: "img/logo.svg",
