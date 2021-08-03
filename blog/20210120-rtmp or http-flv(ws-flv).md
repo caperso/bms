@@ -1,14 +1,12 @@
 ---
-slug: 20210120
-title: 20210120-rtmp or http-flv(ws-flv)
+slug: 20210121
+title: 20210121-rtmp or http/ws-flv
 author: Yao
-author_title: fe
+author_title: senior developer
 author_url: https://github.com/caperso
-# author_image_url:
-tags: [md, fe, daily]
+author_image_url: https://avatars.githubusercontent.com/u/34877623?s=400&u=8da3f1b8199cdbd5591ea229149fa663f2011065&v=4
+tags: [media, protocol, live, stream]
 ---
-
-# 20210120-rtmp or http-flv(ws-flv)
 
 ## http-flv
 
@@ -26,7 +24,9 @@ tags: [md, fe, daily]
 **问题**:
 1.flv 文件格式大体怎样?
 2.header 字段内容?
-3.h264编码的flv content 是否和其他流内容一样
+3.h264 编码的 flv content 是否和其他流内容一样
+
+<!--truncate-->
 
 ## rtmp 和 http-flv 延迟
 

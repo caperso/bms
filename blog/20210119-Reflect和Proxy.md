@@ -1,16 +1,12 @@
 ---
 slug: 20210119
-title: 20210119-Reflect 和 Proxy
+title: Reflect 和 Proxy
 author: Yao
-author_title: fe
+author_title: senior developer
 author_url: https://github.com/caperso
-# author_image_url:
-tags: [md, fe, daily]
+author_image_url: https://avatars.githubusercontent.com/u/34877623?s=400&u=8da3f1b8199cdbd5591ea229149fa663f2011065&v=4
+tags: [js, esnext]
 ---
-
-# 20210119-Reflect 和 Proxy
-
-# Reflect 和 Proxy
 
 ## Reflect
 
@@ -27,6 +23,8 @@ from **mdn** [https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/
 > Reflect 对象提供了以下静态方法，这些方法与 proxy handler methods 的命名相同.
 
 > 其中的一些方法与 Object 相同, 尽管二者之间存在 某些细微上的差别
+
+<!--truncate-->
 
 ---
 
