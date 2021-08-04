@@ -5,7 +5,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 module.exports = {
   title: "Multi Disturbances",
   tagline: "Dinosaurs are cool",
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://mds.vercel.app",
   baseUrl: "/",
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
@@ -47,8 +47,7 @@ module.exports = {
           routeBasePath: "/",
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl:
-            "https://github.com/caperso",
+          editUrl: "https://github.com/caperso",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
