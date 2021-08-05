@@ -98,6 +98,39 @@ chrome.runtime.onInstalled - 此钩子在挂载 extension 之后进行触发,可
 
 `chrome.runtime.onInstalled.addListener()`
 
-chrome.declarativeContent.onPageChange
+### demo: 自动表单填写
+
+有份表单
+
+<https://codesandbox.io/s/wizardly-hopper-c3x78?file=/index.html>
+
+制作一个能填写表单内容的 bot
+**手动填写**
+
+1. 声明一个文档 background.js
+
+```json
+  "background": {
+    "service_worker": "background.js"
+  },
+```
+
+- 注: chrome 91 起, service-worker 必须必须在根目录才能挂载.
+
+2. 简单写个 button 的 ui
+
+```json
+  "action": {
+    "default_popup": "ui/index.html"
+  }
+```
+
+在此引入 script
+`<script src="./index.js"></script>`
+
+**自动填写**
+不自动填写怎么能叫 bot 呢
 
 ## 发布
+
+-
