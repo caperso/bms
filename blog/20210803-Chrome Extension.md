@@ -63,10 +63,22 @@ tags: [chrome]
   "icons": {
     "16": "images/16.png" // "32 64 128"
   },
-  "permissions": ["activeTab", "contextMenus", "declarativeContent", "storage"],
-  "manifest_version": 2
+  "permissions": ["activeTab", "contextMenus", "declarativeContent", "storage"], // 权限
+  "manifest_version": 2 // !
 }
 ```
+
+**manifest_version**
+
+这其中 manifest_version - mv 是控制 chrome extension 适应的接口版本的重要参数, 2020 更新第三版, 有很多安全和性能提升.
+
+例如加入了对 service workers 和 promises 的支持
+
+<https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/>
+
+而且文档也提到了 mv 会逐步要求升级, V1 已被弃用, V2 在未来也会被弃用
+
+V3 最低要求是 chrome 88
 
 ### 基础
 
@@ -78,6 +90,14 @@ tags: [chrome]
 
 ### chrome 对象
 
-    `window.chrome`/`window.chrome.runtime`
+直接可以访问的`window.chrome`/`window.chrome.runtime`
 
-### 发布
+典型的 API:
+
+chrome.runtime.onInstalled - 此钩子在挂载 extension 之后进行触发,可在此挂入监听
+
+`chrome.runtime.onInstalled.addListener()`
+
+chrome.declarativeContent.onPageChange
+
+## 发布
