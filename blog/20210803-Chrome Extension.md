@@ -115,9 +115,32 @@ chrome.runtime.onInstalled - 此钩子在挂载 extension 之后进行触发,可
   },
 ```
 
-- 注: chrome 91 起, service-worker 必须必须在根目录才能挂载.
+在 background.service_worker 中添加该脚本,
+这是扩展服务的入口, 对浏览器行为监听的地点.
 
-2. 简单写个 button 的 ui
+通过 chromeAPI 构建一个简单的服务.
+
+`chrome.declarativeContent`
+可根据页面内容执行操作，而无需获得读取页面内容的权限。
+
+在此, 我们要定一个规则
+
+```js
+const rule = {
+  condition: [
+    new chrome.declarativeContent.PageStateMatcher({
+      pageUrl: { hostContains: "*" },
+    }),
+  ],
+  action: [new chrome.declarativeContent.showPageAction()],
+};
+```
+
+> 注: 应该始终批量注册或取消注册规则，而不是单独注册或取消注册。
+
+> 注: chrome 93 之前, service-worker 必须必须在项目根目录才能挂载, manifest 同级.
+
+1. 简单写个 button 的 ui
 
 ```json
   "action": {
@@ -127,6 +150,8 @@ chrome.runtime.onInstalled - 此钩子在挂载 extension 之后进行触发,可
 
 在此引入 script
 `<script src="./index.js"></script>`
+
+> 我并不想在每个页面加载我的插件
 
 **自动填写**
 不自动填写怎么能叫 bot 呢
