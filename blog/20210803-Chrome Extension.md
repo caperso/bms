@@ -44,17 +44,9 @@ tags: [chrome]
   "version": "1.0",
   "description": "A dancing bot",
   "background": {
-    "scripts": ["scripts/background.js"],
-    "persistent": false
+    "service_worker": "./background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["scripts/content_script.js"],
-      "all_frames": true
-    }
-  ],
-  "page_action": {
+  "action": {
     "default_popup": "ui/index.html", // 在此挂载界面
     "default_icon": {
       "16": "images/16.png" // "32 64 128"
@@ -64,7 +56,7 @@ tags: [chrome]
     "16": "images/16.png" // "32 64 128"
   },
   "permissions": ["activeTab", "contextMenus", "declarativeContent", "storage"], // 权限
-  "manifest_version": 2 // !
+  "manifest_version": 3 // !
 }
 ```
 
@@ -88,13 +80,19 @@ V3 最低要求是 chrome 88
 
 3. chrome-extension-api:<https://developer.chrome.com/docs/extensions/reference/>
 
+> reload extension 后,在测试页面需要重新加载
+
 ### chrome 对象
 
 直接可以访问的`window.chrome`/`window.chrome.runtime`
 
 典型的 API:
 
-chrome.runtime.onInstalled - 此钩子在挂载 extension 之后进行触发,可在此挂入监听
+chrome.scripting - 执行另一份 script.
+
+需要权限: scripting
+
+chrome.runtime.onInstalled - 在挂载 extension 之后进行触发,可在此挂入监听
 
 `chrome.runtime.onInstalled.addListener()`
 
@@ -104,24 +102,68 @@ chrome.runtime.onInstalled - 此钩子在挂载 extension 之后进行触发,可
 
 <https://codesandbox.io/s/wizardly-hopper-c3x78?file=/index.html>
 
-制作一个能填写表单内容的 bot
-**手动填写**
+现在,制作一个能填写表单内容的 bot
+
+#### 实现 1: 点击 extension 填写表单
 
 1. 声明一个文档 background.js
 
-```json
+```json manifest.json
   "background": {
     "service_worker": "background.js"
   },
 ```
 
 在 background.service_worker 中添加该脚本,
-这是扩展服务的入口, 对浏览器行为监听的地点.
+这是也是扩展服务的入口, 通过这个 chromeAPI 构建一个简单的服务.
+同时, 需要将权限添加
 
-通过 chromeAPI 构建一个简单的服务.
+```json manifest.json
+"permissions": [
+    "activeTab", // 获取激活的tab
+    "tabs", // 获取tabs
+    "scripting", // 获取执行脚本的能力
+    "contextMenus", // 获取右键事件
+    "declarativeContent", // 获取探测页面内容权限 ***  可根据页面内容执行操作，而无需获得读取页面内容的权限。
+],
+```
 
-`chrome.declarativeContent`
-可根据页面内容执行操作，而无需获得读取页面内容的权限。
+在 background.js, 写入主要的填写逻辑
+
+```js background.js
+function fillForm() {
+  const data = {
+    name: "John Doe",
+    age: 32,
+    address: "Any town",
+    country: "Iceland",
+    phone: "+1426855510",
+  };
+
+  const prefix = "data-form";
+
+  document.querySelector(`[${prefix}-id="name"]`).value = data.name;
+  document.querySelector(`[${prefix}-id="age"]`).value = data.age;
+  document.querySelector(`[${prefix}-id="address"]`).value = data.address;
+  document.querySelector(`[${prefix}-id="country"]`).value = data.country;
+  document.querySelector(`[${prefix}-id="phone"]`).value = data.phone;
+}
+
+chrome.action.onClicked.addListener((tab) => {
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    function: fillForm,
+  });
+});
+```
+
+这样, 点击 extension 的 icon 就可以调用 background 中的内容了.
+
+#### 实现 2: 有 UI, 需要自定选项
+
+在开发代码之前, 插播一条必要的知识点
+1. content_scripts: Content scripts live in an isolated world, 
+2. 
 
 在此, 我们要定一个规则
 
@@ -153,9 +195,12 @@ const rule = {
 
 > 我并不想在每个页面加载我的插件
 
-**自动填写**
+#### **手动填写** =〉 **自动填写**
+
 不自动填写怎么能叫 bot 呢
 
 ## 发布
 
 -
+
+devtools 掉线: reload extension, 权限设置错误
