@@ -1,6 +1,6 @@
 ---
 slug: 20210121
-title: 20210121-rtmp or http/ws-flv
+title: rtmp or http/ws-flv
 author: Yao
 author_title: senior developer
 author_url: https://github.com/caperso
