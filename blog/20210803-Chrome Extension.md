@@ -161,11 +161,35 @@ chrome.action.onClicked.addListener((tab) => {
 
 #### 实现 2: 有 UI, 需要自定选项
 
-在开发代码之前, 插播一条必要的知识点
-1. content_scripts: Content scripts live in an isolated world, 
-2. 
+##### 在开发代码之前, 插播一条必要了解几个脚本
 
-在此, 我们要定一个规则
+**content.js**
+
+Chrome 插件向页面注入的脚本.
+content-scripts 和 页面共享 DOM.
+当然,不共享 JS.
+
+每个 content script 都是独立运行的
+
+> Content scripts live in an isolated world, allowing a content script to make changes to its JavaScript environment without conflicting with the page or other extensions' content scripts.
+
+<https://developer.chrome.com/docs/extensions/mv3/content_scripts/>
+
+**background.js**
+也就是现的 service-worker, 他即为扩展的服务,也是扩展的生命周期.
+浏览器若启动了扩展,它便会随着浏览器的打开而打开.
+在浏览器的关闭时结束.
+通常我们需要
+
+**ui/index.js**
+这就是扩展 ui 需要的脚本
+
+**注意**
+
+1. 脚本支持 ES6 语法, ~~应该也~~支持最新 ES 语法,这个是和 chrome 自身解释器一样的.
+2. content_scripts 无法使用 import, 意味着第三方模块不能静态加载
+3. content_script 中,this 指向的是当前 window, 那么也就说明有 BOM 对象, 不是 node 进程,没有 process
+4. 在脚本中调用 chrome.extension 即指向了本身扩展对象
 
 ```js
 const rule = {
@@ -179,7 +203,6 @@ const rule = {
 ```
 
 > 注: 应该始终批量注册或取消注册规则，而不是单独注册或取消注册。
-
 > 注: chrome 93 之前, service-worker 必须必须在项目根目录才能挂载, manifest 同级.
 
 1. 简单写个 button 的 ui
@@ -204,3 +227,33 @@ const rule = {
 -
 
 devtools 掉线: reload extension, 权限设置错误
+
+## 其他
+
+1. 我还是想在 content_script 中调用其他脚本
+   可行, 参见<https://github.com/otiai10/chrome-extension-es6-import>
+
+   - 通过异步获取扩展的其他脚本并执行
+
+```js content.js
+async () => {
+  const src = chrome.extension.getURL("src/js/content_sub.js");
+};
+```
+
+- 在 manifest 中, 声明**对本扩展内**的目录访问支持
+  - <https://developer.chrome.com/docs/extensions/mv3/manifest/web_accessible_resources/>
+  - 文档中声明了一点, 这些资源是可以被页面/其他扩展所访问的.
+
+```json manifest.json
+"web_accessible_resources": [
+  {
+    "resources": ["src/js/*"], // '开放的资源(image/脚本...)'
+    "extensions": "leenfdecgofgegmmabaciaognmodhemc", // 这是允许访问的extension id
+    "matches":[] // 匹配其他页面地址
+  }
+]
+```
+
+可以好好利用此配置来加强其安全性, 部分的恶意操作在文档中也有列举.
+
