@@ -1,6 +1,6 @@
 ---
 slug: 20210111
-title: 隐式 effect 依赖
+title: Hidden effect dependency
 author: Yao
 author_title: senior developer
 author_url: https://github.com/caperso

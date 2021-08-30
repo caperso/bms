@@ -1,6 +1,6 @@
 ---
 slug: 20210203
-title: 如何覆写cra中webpack条目
+title: 覆写cra中webpack条目
 author: Yao
 author_title: senior developer
 author_url: https://github.com/caperso

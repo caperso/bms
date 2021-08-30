@@ -14,12 +14,25 @@ tags: [chrome]
 
 ### 能做些什么?
 
+基础的:
+
 1. 做工具、小插件、widgets
 2. 做一些 bot
 
+控制能力:
+
+1. 书签控制；
+2. 自动操作(Tampermonkey)
+3. 下载控制；
+4. 标签/窗口控制；
+5. 网页事件监听；
+6. 页面注入(Adblock);
+
 ### 使用示例
 
-仅限**开发者模式**, 没有必要发布
+对于我们内部开发, 没有必要发布
+
+可在**开发者模式**中加载目标目录(必有入口文件 manifest.json)
 
 1. Clone this repository
 2. Open `chrome://extensions/` url in your Chrome browser
@@ -74,9 +87,9 @@ V3 最低要求是 chrome 88
 
 ### 基础
 
-1. js. 可加入 jq, lodash 库等工具库
+1. js. 可加入 jq, lodash 库等工具库 (react 等库则需要编译产物)
 
-2. html, css 如果需要界面化
+2. html, css (如果需要界面化)
 
 3. chrome-extension-api:<https://developer.chrome.com/docs/extensions/reference/>
 
@@ -218,7 +231,7 @@ const rule = {
 
 > 我并不想在每个页面加载我的插件
 
-#### **手动填写** =〉 **自动填写**
+#### 实现 3: 自动填写
 
 不自动填写怎么能叫 bot 呢
 
@@ -257,3 +270,6 @@ async () => {
 
 可以好好利用此配置来加强其安全性, 部分的恶意操作在文档中也有列举.
 
+## Refs
+
+<https://juejin.cn/post/6986437856348602382>

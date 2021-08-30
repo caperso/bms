@@ -96,3 +96,21 @@ https://bitbucket.org/xivart/%7B3b434a2f-3aec-4049-8c2a-e3b49bdaa464%7D/pull-req
      `
 
 3. 升级依赖总是会带来新的不确定成分, 使用 ts, 好的 test、story 是给之后的维护铺路, 如果是空降的老项目,做好能做到的,然后 wish you good luck`
+
+**Update**
+
+最近看了 Dan 的文章, 关于 audit 的吐槽
+
+提及了很多来自 npm audit 的修复是无意义的(对于开发而言),
+
+却造成了诸多困扰
+
+最后提供了若干解决手段, 虽然并不能解决主要矛盾
+
+其中有一个关于现在 cra / vite / nextjs 在做的内联依赖, 整体脱离 node_modules
+
+这个很新颖, 可以了解下
+
+原文暂无翻译
+
+https://overreacted.io/npm-audit-broken-by-design/
