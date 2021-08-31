@@ -2,9 +2,11 @@ const { program } = require("../node_modules/commander");
 const fs = require("fs");
 const path = require("path");
 
-const getDefaultEndpoint = () => {
+const getDefaultDate = () => {
   const date = new Date();
-  return `${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`;
+  let month = date.getMonth() + 1;
+  month = month < 10 ? `0${month}` : `month`;
+  return `${date.getFullYear()}${month}${date.getDate()}`;
 };
 
 const defaultUrl = "https://github.com/caperso";
@@ -12,29 +14,23 @@ const defaultAuthor = "Yao";
 const defaultAuthorTitle = "senior developer";
 const defaultAvatar =
   "https://avatars.githubusercontent.com/u/34877623?s=400&u=8da3f1b8199cdbd5591ea229149fa663f2011065&v=4";
+const defaultTitle = "Untitled";
 
 const standardMarkdownTemplate = (payload) => {
   const {
     name,
-    title,
-    author,
-    authorTitle,
-    authorPage,
-    avatar,
+    title = defaultTitle,
+    author = defaultAuthor,
+    authorTitle = defaultAuthorTitle,
+    authorPage = defaultUrl,
+    avatar = defaultAvatar,
     tags = [],
   } = payload;
 
-  const template = `
-    ---
-    slug: ${name || getDefaultEndpoint()} 
-    title: ${title || "Untitled"} 
-    author: ${author || defaultAuthor} 
-    author_title: ${authorTitle || defaultAuthorTitle}
-    author_url: ${authorPage || defaultUrl}
-    author_image_url: ${avatar || defaultAvatar} 
-    tags: [${tags.join()}]
-    ---
-    `;
+  const template = `---\nslug: ${
+    name || getDefaultDate()
+  } \ntitle: ${title} \nauthor: ${author} \nauthor_title: ${authorTitle}\nauthor_url: ${authorPage}\nauthor_image_url: ${avatar} \ntags: [${tags.join()}]\n---
+`;
 
   return template;
 };
@@ -48,7 +44,10 @@ const standardMarkdownTemplate = (payload) => {
 function create(targetPath, { name }) {
   //  generate file contents
   const content = standardMarkdownTemplate({ name });
-  fs.writeFileSync(path.resolve(targetPath, `${name}.md`), content);
+  fs.writeFileSync(
+    path.resolve(targetPath, `${getDefaultDate()}-${name}.md`),
+    content
+  );
 
   console.log(`Success: Templated markdown generated!`);
   process.exit(0);
@@ -56,19 +55,19 @@ function create(targetPath, { name }) {
 
 const targetPath = path.resolve(process.cwd(), "./blog/in-progress");
 
-// create(targetPath, { name: "test" });
-
 program
   .command("g")
   .description("Generate a template Markdown")
-  .option("-n", "--name <name>", "Filename")
+  .option("-n, --filename <filename>", "Name of your new markdown")
   .action(function (cmd) {
-    const { name } = cmd;
-    console.log(111);
+    const { filename } = cmd;
+    console.log(cmd);
     try {
       fs.accessSync(targetPath);
-      create(targetPath, { name });
+      create(targetPath, { name: filename });
     } catch (e) {
       console.error(e);
     }
   });
+
+program.parse(process.argv);
