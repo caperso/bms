@@ -46,7 +46,6 @@ module.exports = {
           path: "./blog",
           routeBasePath: "/",
           showReadingTime: true,
-          showLastUpdateTime: true,
           editUrl: "https://github.com/caperso",
         },
         theme: {

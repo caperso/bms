@@ -16,14 +16,14 @@ tags: [react, react-hooks]
 
 刚开始以为是这个 hook 的问题
 
-<!--truncate-->
-
 ```tsx
 const [totalDistance, , , , fliedRate] = useDistance({
   wps: currentTask!.wayPointGroups.map((wpg) => wpg.points).flat(),
   completed: fliedSum,
 });
 ```
+
+<!--truncate-->
 
 ```tsx
 /**
@@ -114,8 +114,12 @@ export const useDistance = (props: { wps: WayPoint[]; completed?: number }) => {
   });
   ```
 
-  - effect 中存在 states, 使用该 hook 可理解为在组件内展开.
+  关键语句
+
+  - effect 中存在 states
+  - 使用该 hook 可理解为在组件内展开整个 hook.
   - setState 时,该组件刷新,生成新的 wps(申明新的内存区域)
+    `wps: currentTask!.wayPointGroups.map((wpg) => wpg.points).flat(),`
 
   ```tsx
   wps: currentTask!.wayPointGroups.map((wpg) => wpg.points).flat();
