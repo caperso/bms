@@ -47,7 +47,21 @@ tags: [chrome]
 
 ## 开发
 
-### 扩展入口声明
+### 基本技能需求
+
+1. js.
+
+   - 可加入 jq, lodash 库等工具库 (react 等库则需要编译产物)
+
+2. html, css
+
+   - (如果需要界面化)
+
+3. chrome-extension-api:<https://developer.chrome.com/docs/extensions/reference/>
+
+### 开发入口
+
+manifest.json 声明文件
 
 根目录必须要有 manifest.json 声明文件
 
@@ -75,7 +89,7 @@ tags: [chrome]
 
 **manifest_version**
 
-这其中 manifest_version - mv 是控制 chrome extension 适应的接口版本的重要参数, 2020 更新第三版, 有很多安全和性能提升.
+manifest_version (mv), 是控制 chrome extension 适应的接口版本的重要参数, 2020 更新第三版, 有很多安全和性能提升.
 
 例如加入了对 service workers 和 promises 的支持
 
@@ -83,17 +97,24 @@ tags: [chrome]
 
 而且文档也提到了 mv 会逐步要求升级, V1 已被弃用, V2 在未来也会被弃用
 
+当然现在流行的还是 V2
+
 V3 最低要求是 chrome 88
 
-### 基础
+## 调试
 
-1. js. 可加入 jq, lodash 库等工具库 (react 等库则需要编译产物)
+在**开发者模式**中加载目标目录
 
-2. html, css (如果需要界面化)
+- 必有入口文件 manifest.json
 
-3. chrome-extension-api:<https://developer.chrome.com/docs/extensions/reference/>
+1. 输入 url `chrome://extensions/`
+2. 开启开发者模式 `Developer mode`
+3. 加载本地已有 repo 目录位置 `Load unpacked` 按钮
+4. 在扩展列表找到这个扩展, 点击卡片上的 log, `background page (service worker)`
+5. 页面调试可直接在`source panel` 中的`content scripts`上找到,
+6. 然后进行断点调试
 
-> reload extension 后,在测试页面需要重新加载
+> 调试窗口/调试用的页面, 在 reload extension 后,需要重新加载才能生效
 
 ### chrome 对象
 
