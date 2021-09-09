@@ -30,7 +30,7 @@ tags: [media, protocol, live, stream]
 
 ## rtmp 和 http-flv 延迟
 
-：这两种协议大致数据一致，所以延时原因都是差不多的。
+这两种协议大致数据一致，所以延时原因都是差不多的。
 
 按理说 tcp 流式传输直播因该都是延时极低的，为什么 rtmp 和 http-flv 还有延时呢？
 
