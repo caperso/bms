@@ -23,7 +23,7 @@ extensions are apps,hosted by chrome, make and can make **a chrome** to **their 
 To the developers,
 extension can be much more that,
 
-It could be **a tool**, **a playground**, **a test runner** or a bot, also can be **a tracker, a watcher, or a leaker**.
+It could be **a tool**, **a playground**, **a test runner** or **a bot**, also can be **a tracker, a watcher, or a leaker**.
 
 So, make it short, extensions are fun to play, great to help.
 
@@ -31,18 +31,16 @@ So, make it short, extensions are fun to play, great to help.
 
 For us, it's not a problem at all!
 all the things are written in pure js,
-you can follow this: it's a very profession doc
+you can follow this: it's a very professional doc
 [Official doc]<https://developer.chrome.com/docs/extensions/>
 
-## show off the extension
+## Demo time
 
 Let's take a look on this extension demo
 
-### show the outline of elements
+## What does the extension be capable of
 
-## what does the extension be capable of
-
-- Web page control
+- Web page control(grammarly)
 - Event listening
 - Automation (bot, Tampermonkey, )
 - Bookmark control；
@@ -50,38 +48,16 @@ Let's take a look on this extension demo
 - Tab control；
 - Page script injection(Adblock);
 
-Of course many abilities need permissions,
-some needs confirmation by the user
-and extension store has rules and restriction in case of extension abusing
+Of course they are powerful, but many abilities need **permissions**,
+some even needs **confirmation** by the user.
 
-Simply, we can think that it's a script running on the background
-plus, it's listening all the time.
+The extension store has rules to restrict the behavior of apps, in case of **abusing**.
 
-## Load your extension
+Simply, we can regard it as scripts running on the background, providing the service, and be able to control your chrome.
 
-Usually the final built file of an extension is a .crx file,
+## Development
 
-but if we don't have to publish it on the chrome extension store,
-we can just load the development folder, on the develop mode.
-
-1. Clone this repository
-2. Open `chrome://extensions/` url in your Chrome browser
-3. Turn on the `Developer mode`
-4. Click `Load unpacked` button
-5. Navigate to the folder with the extension
-6. Press select
-
-![picture 1](../images/509715e43df41c5fb9ac8f1227191c485db5d1d996f33c9662cf27277e2a8da8.png)
-
-directly load where the manifest.json is
-
-it's not compilcated, and no need to complie
-
-## parts of the functionality
-
-## development
-
-### requirements
+### Requirements
 
 1. js.
 
@@ -179,7 +155,25 @@ Chrome 88 is the first one supports V3
 - storage
   - access to the chrome.storage
 
-### Built a form-filling-bot
+## Load your own extension
+
+It's not complicated, and no need to compile it
+
+Usually the final built file of an extension is a .crx file,
+
+but if we don't have to publish it on the chrome extension store,
+we can just load the development folder, on the develop mode.
+
+1. Clone this repository
+2. Open `chrome://extensions/` url in your Chrome browser
+3. Turn on the `Developer mode`
+4. Click `Load unpacked` button
+5. Navigate to the folder with the extension
+6. Press select
+
+![picture 1](../images/509715e43df41c5fb9ac8f1227191c485db5d1d996f33c9662cf27277e2a8da8.png)
+
+## Built a form-filling-bot
 
 Let's fill a form
 
@@ -187,7 +181,7 @@ Let's fill a form
 
 现在,制作一个能填写表单内容的 bot
 
-#### Register the files
+### Register the files
 
 1. We put our script on `background.service_worker`
 
@@ -277,14 +271,6 @@ Each `content script`'s runtime is isolated.
 
 **background.js**
 
-也就是现的 service-worker, 他即为扩展的服务,也是扩展的生命周期.
-浏览器若启动了扩展,它便会随着浏览器的打开而打开.
-在浏览器的关闭时结束.
-通常我们需要
-
-**ui/index.js**
-这就是扩展 ui 需要的脚本
-
 **Tips on content script**
 
 1. **ES6** is supported , it's powered by chrome won't let you down
@@ -342,11 +328,11 @@ You can access your scripts by cmd + p to search the js filename on devtools
 
 So you can directly put the breakpoint on lines you want, it would paused just like we debug the web.
 
+>if you change the manifest.json reload on extension page
+
 ## Down to the API
 
-On devtools, we can directly access Chrome API by
-
-`window.chrome`
+On devtools, there is a object `window.chrome`, but is not same with `chrome` object
 
 Some most common API:
 
@@ -355,9 +341,28 @@ Some most common API:
   - Permission required: scripting
 
 - chrome.runtime
+
   - the runtime object
   - chrome.runtime.onInstalled
     - Extension loaded hook
     - You can start listening here `chrome.runtime.onInstalled.addListener()`
+
+- chrome.bookmarks
+
+  - bookmarks.create
+  - bookmarks.getTree
+  - bookmarks.remove
+  - bookmarks.update
+
+- chrome.storage
+
+- chrome.contentSettings
+
+  - websites can use features such as cookies, JavaScript,
+  - customize Chrome's behavior on a per-site basis instead of globally
+  - chrome.contentSettings.ImagesContentSetting = 'block'
+  - location/javascript/camera/plugins...
+
+- ## chrome.webRequest
 
 ## REFS
