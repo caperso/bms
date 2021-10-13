@@ -89,19 +89,29 @@ manifest.json 声明文件
 
 **manifest_version**
 
-manifest_version (mv), 是控制 chrome extension 适应的接口版本的重要参数, 2020 更新第三版, 有很多安全和性能提升.
+manifest_version , decides to connect which version of the extension Api,
 
-例如加入了对 service workers 和 promises 的支持
+it's important because it's like a major version changes, news will be added and deprecated ones would drop
+
+in 2020 , it comes to the version 3, bringing the security updates.
+
+like replacing the background with service workers, full promises supports
 
 <https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/>
 
-而且文档也提到了 mv 会逐步要求升级, V1 已被弃用, V2 在未来也会被弃用
+Google also gives a timeline of live time v2
 
-当然现在流行的还是 V2
+https://developer.chrome.com/docs/extensions/mv3/mv2-sunset/
 
-V3 最低要求是 chrome 88
+> By January 2023 v2 Chrome stops running Manifest V2 extensions
+
+Of course, v2 still the most popular one.
+
+Chrome 88 is the first one supports V3
 
 ## 调试
+
+
 
 在**开发者模式**中加载目标目录
 

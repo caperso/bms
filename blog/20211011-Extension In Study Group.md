@@ -40,22 +40,21 @@ Let's take a look on this extension demo
 
 ### show the outline of elements
 
-
 ## what does the extension be capable of
 
-1. web page control
-2. event listening
-3. automation (bot, Tampermonkey, )
-4. bookmark control；
-5. download control；
-6. tab/window control；
-7. page script injection(Adblock);
+- Web page control
+- Event listening
+- Automation (bot, Tampermonkey, )
+- Bookmark control；
+- Download control；
+- Tab control；
+- Page script injection(Adblock);
 
-of course many abilities need permissions,
+Of course many abilities need permissions,
 some needs confirmation by the user
 and extension store has rules and restriction in case of extension abusing
 
-simply, we can think that it's a script running on the background
+Simply, we can think that it's a script running on the background
 plus, it's listening all the time.
 
 ## Load your extension
@@ -65,7 +64,7 @@ Usually the final built file of an extension is a .crx file,
 but if we don't have to publish it on the chrome extension store,
 we can just load the development folder, on the develop mode.
 
-1. Clone this  repository
+1. Clone this repository
 2. Open `chrome://extensions/` url in your Chrome browser
 3. Turn on the `Developer mode`
 4. Click `Load unpacked` button
@@ -73,7 +72,6 @@ we can just load the development folder, on the develop mode.
 6. Press select
 
 ![picture 1](../images/509715e43df41c5fb9ac8f1227191c485db5d1d996f33c9662cf27277e2a8da8.png)
-
 
 directly load where the manifest.json is
 
@@ -87,19 +85,22 @@ it's not compilcated, and no need to complie
 
 1. js.
 
-   - 可加入 jq, lodash 库等工具库 (react 等库则需要编译产物)
+   - You can also import JQuery, lodash libs (react may need built file)
 
 2. html, css
 
-   - (如果需要界面化)
+   - If the UI is needed
 
-3. chrome-extension-api:<https://developer.chrome.com/docs/extensions/reference/>
+3. cookbook
+   - [chrome-extension-api]<https://developer.chrome.com/docs/extensions/reference/>
 
-### first step
+### First step
 
-manifest.json 声明文件
+`manifest.json`
 
-根目录必须要有 manifest.json 声明文件
+There must be a `manifest.json`,
+
+Like this
 
 ```json manifest.json
 {
@@ -110,7 +111,7 @@ manifest.json 声明文件
     "service_worker": "./background.js"
   },
   "action": {
-    "default_popup": "ui/index.html", // 在此挂载界面
+    "default_popup": "ui/index.html", // the UI
     "default_icon": {
       "16": "images/16.png" // "32 64 128"
     }
@@ -118,36 +119,77 @@ manifest.json 声明文件
   "icons": {
     "16": "images/16.png" // "32 64 128"
   },
-  "permissions": ["activeTab", "contextMenus", "declarativeContent", "storage"], // 权限
+  "permissions": ["activeTab", "contextMenus", "declarativeContent", "storage"],
   "manifest_version": 3 // !
 }
 ```
 
-**manifest_version**
+#### **manifest_version**
 
-manifest_version (mv), 是控制 chrome extension 适应的接口版本的重要参数, 2020 更新第三版, 有很多安全和性能提升.
+manifest_version , decides to connect which version of the extension Api,
 
-例如加入了对 service workers 和 promises 的支持
+it's important because it's like a major version changes, news will be added and deprecated ones would drop
+
+in 2020 , it comes to the version 3, bringing the security updates.
+
+like replacing the background with service workers, full promises supports
 
 <https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/>
 
-而且文档也提到了 mv 会逐步要求升级, V1 已被弃用, V2 在未来也会被弃用
+Google also gives a timeline of live time v2
 
-当然现在流行的还是 V2
+<https://developer.chrome.com/docs/extensions/mv3/mv2-sunset/>
 
-V3 最低要求是 chrome 88
+> By January 2023 v2 Chrome stops running Manifest V2 extensions
 
-### Built a form-filling-bot 
+Of course, v2 still the most popular one.
 
-有份表单
+Chrome 88 is the first one supports V3
+
+#### **permissions**
+
+- activeTab
+
+  - Requests that the extension be granted permissions according to the activeTab specification.
+
+- bookmarks
+
+  - access to the chrome.bookmarks
+
+- clipboardRead/ clipboardWrite
+
+  - it's Required if extension using `document.execCommand('paste'|'copy'|'cut')`
+
+- declarativeContent
+
+  - access to the chrome.declarativeContent
+
+- downloads
+
+  - access to the chrome.downloads
+
+- geolocation
+
+  - access to the chrome.geolocation
+
+- history
+
+  - access to the chrome.history
+
+- storage
+  - access to the chrome.storage
+
+### Built a form-filling-bot
+
+Let's fill a form
 
 <https://codesandbox.io/s/wizardly-hopper-c3x78?file=/index.html>
 
 现在,制作一个能填写表单内容的 bot
 
-#### 实现 1: 点击 extension 填写表单
+#### Register the files
 
-1. 声明一个文档 background.js
+1. We put our script on `background.service_worker`
 
 ```json manifest.json
   "background": {
@@ -155,23 +197,44 @@ V3 最低要求是 chrome 88
   },
 ```
 
-在 background.service_worker 中添加该脚本,
-这是也是扩展服务的入口, 通过这个 chromeAPI 构建一个简单的服务.
-同时, 需要将权限添加
+!!!123!!!!!!!!!!!!!
+
+Yep, it's like a service main script,
+and we also need the permissions
 
 ```json manifest.json
 "permissions": [
-    "activeTab", // 获取激活的tab
-    "tabs", // 获取tabs
-    "scripting", // 获取执行脚本的能力
-    "contextMenus", // 获取右键事件
-    "declarativeContent", // 获取探测页面内容权限 ***  可根据页面内容执行操作，而无需获得读取页面内容的权限。
+    "activeTab",
+    "tabs",
+    "scripting",
+    "contextMenus",
+    "declarativeContent",
 ],
 ```
 
-在 background.js, 写入主要的填写逻辑
+in `content_script`, register a `content.js` file
 
-```js background.js
+```json manifest.json
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "all_frames": true
+    }
+  ],
+```
+
+- matches:
+
+  - access the web context when the url match the rule
+  - it has a match format
+
+- all_frames:
+  - js and css would inject into all frames, not only the most top one
+
+Let's write a
+
+```js content.js
 function fillForm() {
   const data = {
     name: "John Doe",
@@ -190,58 +253,30 @@ function fillForm() {
   document.querySelector(`[${prefix}-id="phone"]`).value = data.phone;
 }
 
-chrome.action.onClicked.addListener((tab) => {
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    function: fillForm,
-  });
-});
+// chrome.action.onClicked.addListener((tab) => {
+//   chrome.scripting.executeScript({
+//     target: { tabId: tab.id },
+//     function: fillForm,
+//   });
+// });
 ```
 
-这样, 点击 extension 的 icon 就可以调用 background 中的内容了.
-
-
-### Give a UI
-
-
-### Automation
-
-
-### debug
-
-> 调试窗口/调试用的页面, 在 reload extension 后,需要重新加载才能生效
-
-
-
-## down to api
-
-直接可以访问的`window.chrome`/`window.chrome.runtime`
-
-典型的 API:
-
-chrome.scripting - 执行另一份 script.
-
-需要权限: scripting
-
-chrome.runtime.onInstalled - 在挂载 extension 之后进行触发,可在此挂入监听
-
-`chrome.runtime.onInstalled.addListener()`
-
-
+And basic bot is here.
 
 **content.js**
 
-Chrome 插件向页面注入的脚本.
-content-scripts 和 页面共享 DOM.
-当然,不共享 JS.
+Chrome extension inject the script/css to the web context.
 
-每个 content script 都是独立运行的
+`content scripts` can access DOM
+
+    - That's why the ADBlock can make the annoying advertisements disappear.
+
+Each `content script`'s runtime is isolated.
 
 > Content scripts live in an isolated world, allowing a content script to make changes to its JavaScript environment without conflicting with the page or other extensions' content scripts.
 
-<https://developer.chrome.com/docs/extensions/mv3/content_scripts/>
-
 **background.js**
+
 也就是现的 service-worker, 他即为扩展的服务,也是扩展的生命周期.
 浏览器若启动了扩展,它便会随着浏览器的打开而打开.
 在浏览器的关闭时结束.
@@ -250,12 +285,20 @@ content-scripts 和 页面共享 DOM.
 **ui/index.js**
 这就是扩展 ui 需要的脚本
 
-**注意**
+**Tips on content script**
 
-1. 脚本支持 ES6 语法, ~~应该也~~支持最新 ES 语法,这个是和 chrome 自身解释器一样的.
-2. content_scripts 无法使用 import, 意味着第三方模块不能静态加载
-3. content_script 中,this 指向的是当前 window, 那么也就说明有 BOM 对象, 不是 node 进程,没有 process
-4. 在脚本中调用 chrome.extension 即指向了本身扩展对象
+1. **ES6** is supported , it's powered by chrome won't let you down
+2. content_scripts cannot static import,
+
+   - but it can import the scripts by
+
+   ```js
+   const url = chrome.runtime.getURL("src/js/main.js");
+   const mainScript = await import(url);
+   ```
+
+3. In content_script, `this` equals `window`, so that it has BOM object, no process object, it's not a node process / service
+4. In extension scripts `chrome.extension` pointing to extension object itself
 
 ```js
 const rule = {
@@ -271,19 +314,50 @@ const rule = {
 > 注: 应该始终批量注册或取消注册规则，而不是单独注册或取消注册。
 > 注: chrome 93 之前, service-worker 必须必须在项目根目录才能挂载, manifest 同级.
 
-1. 简单写个 button 的 ui
+### Give an UI
 
-```json
-  "action": {
-    "default_popup": "ui/index.html"
-  }
+Filling the form automatically is good,
+but sometimes we need some interaction and options to choose
+
+So here comes the UI part.
+
+```json manifest.json
+"action": {
+  "default_popup": "src/ui/index.html",
+  "default_icon": "src/assets/icon.png"
+},
 ```
 
-在此引入 script
+in the HTML, import the script
+
 `<script src="./index.js"></script>`
 
-> 我并不想在每个页面加载我的插件
+### Debug
 
-## ref
+![picture 2](../images/37b555a6943938aac55413e46e562fced0c8681309e4674f2d98a559c923623f.png)
 
-ES6 and latest syntax are supported , powered by chrome , it won't let you down
+You can access your scripts by cmd + p to search the js filename on devtools
+
+![picture 1](../images/ebf10f28b7863ffc4a7374d18b503220081a45be706f6084924a376040ac4226.png)
+
+So you can directly put the breakpoint on lines you want, it would paused just like we debug the web.
+
+## Down to the API
+
+On devtools, we can directly access Chrome API by
+
+`window.chrome`
+
+Some most common API:
+
+- chrome.scripting - executing another script.
+
+  - Permission required: scripting
+
+- chrome.runtime
+  - the runtime object
+  - chrome.runtime.onInstalled
+    - Extension loaded hook
+    - You can start listening here `chrome.runtime.onInstalled.addListener()`
+
+## REFS
