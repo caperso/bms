@@ -30,19 +30,6 @@ It could be **a tool**, **a playground**, **a test runner** or **a bot**, also c
 
 Make it short, extensions are fun to play, great to help.
 
-### How to build my own extension
-
-For us, it's not a problem at all!
-
-All the things are written in pure js,
-you can follow this: it's a very professional doc
-
-[Official doc]<https://developer.chrome.com/docs/extensions/>
-
-## Demo time
-
-Let's take a look on this extension demo
-
 ## What does the extension be capable of
 
 - Web page control(grammarly)
@@ -59,6 +46,19 @@ some even needs **confirmation** by the user.
 The extension store has rules to restrict the behavior of apps, in case of **abusing**.
 
 Simply, we can regard it as scripts running on the background, providing the service, and be able to control your chrome.
+
+### How to build my own extension
+
+For us, it's not a problem at all!
+
+All the things are written in pure js,
+you can follow this: it's a very professional doc
+
+[Official doc]<https://developer.chrome.com/docs/extensions/>
+
+## Demo time
+
+Let's take a look on this extension demo
 
 ## Development
 
