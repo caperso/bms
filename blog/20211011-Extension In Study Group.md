@@ -11,11 +11,14 @@ tags: [chrome extension]
 ## What is extension
 
 The extensions
+
+![picture 3](../images/427302e05ffa9b505911a287819653050b784950e15bd9df8b35617e77d19237.png)
+
+---
+
 We saw some recommendation from store often,
 We downloaded and tried some of them often,
-We even relied on some of them often,
-But
-Do we even know about what exactly the extension is?
+We even relied on some of them often.
 
 To the users,
 extensions are apps,hosted by chrome, make and can make **a chrome** to **their chrome**
@@ -25,13 +28,15 @@ extension can be much more that,
 
 It could be **a tool**, **a playground**, **a test runner** or **a bot**, also can be **a tracker, a watcher, or a leaker**.
 
-So, make it short, extensions are fun to play, great to help.
+Make it short, extensions are fun to play, great to help.
 
-### How can I build my own extension
+### How to build my own extension
 
 For us, it's not a problem at all!
-all the things are written in pure js,
+
+All the things are written in pure js,
 you can follow this: it's a very professional doc
+
 [Official doc]<https://developer.chrome.com/docs/extensions/>
 
 ## Demo time
@@ -100,29 +105,39 @@ Like this
 }
 ```
 
-#### **manifest_version**
+---
 
-manifest_version , decides to connect which version of the extension Api,
+**manifest_version**
 
-it's important because it's like a major version changes, news will be added and deprecated ones would drop
+`manifest_version`
 
-in 2020 , it comes to the version 3, bringing the security updates.
+Decides to connect which version of the extension Api,
 
-like replacing the background with service workers, full promises supports
+It's important because it's like a major version changes,
+new features will be added and deprecated ones would be dropped
+
+In 2020 , it comes to the `version 3`, bringing the security updates.
+
+Like
+
+- replacing the background with service workers,
+- full promises supports
 
 <https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/>
 
-Google also gives a timeline of live time v2
+Google also gives a timeline of `mv2`
 
 <https://developer.chrome.com/docs/extensions/mv3/mv2-sunset/>
 
-> By January 2023 v2 Chrome stops running Manifest V2 extensions
+> By January 2023, v2 Chrome stops running Manifest V2 extensions
 
-Of course, v2 still the most popular one.
+Of course, `mv2` still the most popular one.
 
-Chrome 88 is the first one supports V3
+Chrome 88 is the first one supports `mv3`
 
-#### **permissions**
+---
+
+**permissions**
 
 - activeTab
 
@@ -152,24 +167,20 @@ Chrome 88 is the first one supports V3
 
   - access to the chrome.history
 
-- storage
-  - access to the chrome.storage
-
 ## Load your own extension
 
 It's not complicated, and no need to compile it
 
-Usually the final built file of an extension is a .crx file,
+Usually the final built file of an extension is a `.crx` file,
 
-but if we don't have to publish it on the chrome extension store,
-we can just load the development folder, on the develop mode.
+But we don't have to publish it on the chrome extension store,
+We can just load the **development root folder**
 
 1. Clone this repository
 2. Open `chrome://extensions/` url in your Chrome browser
 3. Turn on the `Developer mode`
 4. Click `Load unpacked` button
-5. Navigate to the folder with the extension
-6. Press select
+5. Select the folder with the extension
 
 ![picture 1](../images/509715e43df41c5fb9ac8f1227191c485db5d1d996f33c9662cf27277e2a8da8.png)
 
@@ -177,9 +188,19 @@ we can just load the development folder, on the develop mode.
 
 Let's fill a form
 
-<https://codesandbox.io/s/wizardly-hopper-c3x78?file=/index.html>
+<https://c3x78.csb.app/>
 
-现在,制作一个能填写表单内容的 bot
+### Given permissions
+
+```json manifest.json
+"permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "contextMenus",
+    "declarativeContent",
+],
+```
 
 ### Register the files
 
@@ -191,20 +212,10 @@ Let's fill a form
   },
 ```
 
-!!!123!!!!!!!!!!!!!
+Yep, it's like a service,
+running all the time till you shutdown the chrome
 
-Yep, it's like a service main script,
-and we also need the permissions
-
-```json manifest.json
-"permissions": [
-    "activeTab",
-    "tabs",
-    "scripting",
-    "contextMenus",
-    "declarativeContent",
-],
-```
+1. Get a `content script`
 
 in `content_script`, register a `content.js` file
 
@@ -221,12 +232,12 @@ in `content_script`, register a `content.js` file
 - matches:
 
   - access the web context when the url match the rule
-  - it has a match format
+  - there is a **Match patterns** in chrome.
 
 - all_frames:
   - js and css would inject into all frames, not only the most top one
 
-Let's write a
+Let's write a little js
 
 ```js content.js
 function fillForm() {
@@ -246,16 +257,9 @@ function fillForm() {
   document.querySelector(`[${prefix}-id="country"]`).value = data.country;
   document.querySelector(`[${prefix}-id="phone"]`).value = data.phone;
 }
-
-// chrome.action.onClicked.addListener((tab) => {
-//   chrome.scripting.executeScript({
-//     target: { tabId: tab.id },
-//     function: fillForm,
-//   });
-// });
 ```
 
-And basic bot is here.
+So a basic bot is done.
 
 **content.js**
 
@@ -263,17 +267,15 @@ Chrome extension inject the script/css to the web context.
 
 `content scripts` can access DOM
 
-    - That's why the ADBlock can make the annoying advertisements disappear.
+> That's why the ADBlock can make the annoying advertisements disappear.
 
 Each `content script`'s runtime is isolated.
 
 > Content scripts live in an isolated world, allowing a content script to make changes to its JavaScript environment without conflicting with the page or other extensions' content scripts.
 
-**background.js**
-
 **Tips on content script**
 
-1. **ES6** is supported , it's powered by chrome won't let you down
+1. **ES6** is supported, it's powered by chrome won't let you down
 2. content_scripts cannot static import,
 
    - but it can import the scripts by
@@ -285,20 +287,6 @@ Each `content script`'s runtime is isolated.
 
 3. In content_script, `this` equals `window`, so that it has BOM object, no process object, it's not a node process / service
 4. In extension scripts `chrome.extension` pointing to extension object itself
-
-```js
-const rule = {
-  condition: [
-    new chrome.declarativeContent.PageStateMatcher({
-      pageUrl: { hostContains: "*" },
-    }),
-  ],
-  action: [new chrome.declarativeContent.showPageAction()],
-};
-```
-
-> 注: 应该始终批量注册或取消注册规则，而不是单独注册或取消注册。
-> 注: chrome 93 之前, service-worker 必须必须在项目根目录才能挂载, manifest 同级.
 
 ### Give an UI
 
@@ -318,7 +306,7 @@ in the HTML, import the script
 
 `<script src="./index.js"></script>`
 
-### Debug
+### Debugging
 
 ![picture 2](../images/37b555a6943938aac55413e46e562fced0c8681309e4674f2d98a559c923623f.png)
 
@@ -328,7 +316,7 @@ You can access your scripts by cmd + p to search the js filename on devtools
 
 So you can directly put the breakpoint on lines you want, it would paused just like we debug the web.
 
->if you change the manifest.json reload on extension page
+> if you change the manifest.json reload on extension page
 
 ## Down to the API
 
