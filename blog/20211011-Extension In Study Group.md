@@ -40,6 +40,8 @@ Make it short, extensions are fun to play, great to help.
 - Tab control；
 - Page script injection(Adblock);
 
+---
+
 Of course they are powerful, but many abilities need **permissions**,
 some even needs **confirmation** by the user.
 
