@@ -353,6 +353,4 @@ Some most common API:
   - chrome.contentSettings.ImagesContentSetting = 'block'
   - location/javascript/camera/plugins...
 
-- ## chrome.webRequest
-
-## REFS
+- chrome.webRequest
