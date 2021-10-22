@@ -8,53 +8,52 @@ author_image_url: https://avatars.githubusercontent.com/u/34877623?s=400&u=8da3f
 tags: [chrome extension]
 ---
 
-## What is extension
+## Extensions
 
-The extensions
+We've seen, we've downloaded many extensions,
+We even rely on some of them often.
 
 ![picture 3](../images/427302e05ffa9b505911a287819653050b784950e15bd9df8b35617e77d19237.png)
 
+To the users
+Extensions are apps, hosted by chrome.
+It's like **a tool**, **a config to customize the chrome**, make **a chrome** to **their chrome**
+
+To the developers
+Extension can be much more that
+It could be **a playground**, **a test runner** or **a bot**, also can be **a tracker, a watcher, or a leaker**, an intentionally harmful program.
+
+Make it short, I think the extension is fun to play, great to help.
+
 ---
-
-We saw some recommendation from store often,
-We downloaded and tried some of them often,
-We even relied on some of them often.
-
-To the users,
-extensions are apps,hosted by chrome, make and can make **a chrome** to **their chrome**
-
-To the developers,
-extension can be much more that,
-
-It could be **a tool**, **a playground**, **a test runner** or **a bot**, also can be **a tracker, a watcher, or a leaker**.
-
-Make it short, extensions are fun to play, great to help.
 
 ## What does the extension be capable of
 
-- Web page control(grammarly)
+- Bookmark control
+- Download control
+- Tab control
+- Web page control (Grammarly)
+- Page script injection (Adblock);
+- Proxy
 - Event listening
-- Automation (bot, Tampermonkey, )
-- Bookmark control；
-- Download control；
-- Tab control；
-- Page script injection(Adblock);
+- Automation (bots, Tampermonkey)
 
 ---
+
+Simply, we can regard it as scripts running on the background, providing the service, and be able to control your chrome.
 
 Of course they are powerful, but many abilities need **permissions**,
 some even needs **confirmation** by the user.
 
 The extension store has rules to restrict the behavior of apps, in case of **abusing**.
 
-Simply, we can regard it as scripts running on the background, providing the service, and be able to control your chrome.
-
 ### How to build my own extension
 
 For us, it's not a problem at all!
 
-All the things are written in pure js,
-you can follow this: it's a very professional doc
+All the things are written in pure js
+
+Here's a very professional doc
 
 [Official doc]<https://developer.chrome.com/docs/extensions/>
 
@@ -102,7 +101,7 @@ Like this
   "icons": {
     "16": "images/16.png" // "32 64 128"
   },
-  "permissions": ["activeTab", "contextMenus", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "contextMenus", "storage"],
   "manifest_version": 3 // !
 }
 ```
@@ -153,10 +152,6 @@ Chrome 88 is the first one supports `mv3`
 
   - it's Required if extension using `document.execCommand('paste'|'copy'|'cut')`
 
-- declarativeContent
-
-  - access to the chrome.declarativeContent
-
 - downloads
 
   - access to the chrome.downloads
@@ -200,7 +195,6 @@ Let's fill a form
     "tabs",
     "scripting",
     "contextMenus",
-    "declarativeContent",
 ],
 ```
 
@@ -269,7 +263,7 @@ Chrome extension inject the script/css to the web context.
 
 `content scripts` can access DOM
 
-> That's why the ADBlock can make the annoying advertisements disappear.
+- I think that's why the ADBlock be able to make the annoying advertisements disappear.
 
 Each `content script`'s runtime is isolated.
 
@@ -354,3 +348,67 @@ Some most common API:
   - location/javascript/camera/plugins...
 
 - chrome.webRequest
+
+## Service Worker
+
+A quick introduction
+
+![picture 1](../images/73002aacc01031249038b584db015ec342903e1a85652339780d97ce8d60e1ab.png)
+
+- popup welcome website
+
+- set rules: when to show to action page, when to run something
+
+- connect the server
+
+- push the notification
+
+- communicate the web via postMessage
+
+- onUninstall: popup feedback website
+
+- better offline experience
+
+Example: dns override (mv2)
+
+```js
+// init
+const settings = { domain: "", ip: "", enabled: false };
+const requestFilter = { urls: ["<all_urls>"] };
+
+const onBeforeSendHeadersHandler = (details) => {
+  if (settings.enabled && details.url.indexOf(settings.ip) > -1) {
+    details.requestHeaders.push({ name: "Host", value: settings.domain });
+    return { requestHeaders: details.requestHeaders };
+  }
+};
+
+// match and redirect
+const onBeforeRequestHandler = function (details) {
+  if (settings.enabled && details.url.indexOf(settings.domain) > -1) {
+    return { redirectUrl: details.url.replace(settings.domain, settings.ip) };
+  }
+};
+
+// fetching the data from extension storage
+chrome.storage.sync.get(settings, function (result) {
+  if (result.domain) settings.domain = result.domain;
+  if (result.ip) settings.ip = result.ip;
+  if (result.enabled) settings.enabled = result.enabled;
+  chrome.browserAction.setIcon({
+    path: (settings.enabled ? "enabled" : "disabled") + ".png",
+  });
+});
+
+// proxy the requests
+chrome.webRequest.onBeforeRequest.addListener(
+  onBeforeRequestHandler,
+  requestFilter,
+  ["blocking"]
+);
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  onBeforeSendHeadersHandler,
+  requestFilter,
+  ["blocking", "requestHeaders"]
+);
+```
