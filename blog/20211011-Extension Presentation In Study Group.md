@@ -1,6 +1,6 @@
 ---
 slug: 20211011
-title: Extension In Study Group
+title: Chrome Extension Presentation In Study Group
 author: Yao
 author_title: senior developer
 author_url: https://github.com/caperso
